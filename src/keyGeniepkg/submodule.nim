@@ -1,6 +1,28 @@
-# This is just an example to get you started. Users of your hybrid library will
-# import this file by writing ``import keyGeniepkg/submodule``. Feel free to rename or
-# remove this file altogether. You may create additional modules alongside
-# this file as required.
+import
+  std / [os, strutils],
+  docopt,
+  version
 
-proc getWelcomeMessage*(): string = "Hello, World!"
+type
+  cmdOpt* = object
+    target*: string
+
+let
+  appName* = getAppFilename().extractFilename
+
+proc readCmdOpt*(): cmdOpt =
+  ## Read command line options.
+  let doc = """
+    $1
+
+    Usage:
+      $1 [<target>]
+
+    Options:
+      -h --help     Show this screen.
+      -v --version  Show version.
+      <target>      Target key name.
+  """ % [appName]
+  let args = doc.dedent.docopt(version = Version)
+  if args["<target>"]:
+    result.target = $args["<target>"]

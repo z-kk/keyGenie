@@ -13,6 +13,7 @@ binDir        = "bin"
 # Dependencies
 
 requires "nim >= 1.6.0"
+requires "docopt"
 
 
 # Tasks
@@ -25,3 +26,16 @@ import std / os
 task ex, "run without build":
   withDir binDir:
     exec "." / bin[0]
+
+
+# Before / After
+
+import std / strutils
+before build:
+  let versionFile = srcDir / bin[0] & "pkg" / "version.nim"
+  versionFile.parentDir.mkDir
+  versionFile.writeFile("const Version* = \"$1\"\n" % version)
+
+after build:
+  let versionFile = srcDir / bin[0] & "pkg" / "version.nim"
+  versionFile.writeFile("const Version* = \"\"\n")
