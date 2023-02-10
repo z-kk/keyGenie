@@ -22,10 +22,16 @@ when isMainModule:
     data = getData()
   let
     opt = readCmdOpt()
-    key = readPasswordFromStdin()
-    src = data.encStr(opt.target)
+    key =
+      if opt.passwd != "":
+        opt.passwd
+      else:
+        readPasswordFromStdin()
+    src = data.encStr(opt.target, opt.isOneLine)
 
   if src == "":
     data.newKey(key)
   else:
     src.output(key)
+    if not opt.isOneLine:
+      echo ""

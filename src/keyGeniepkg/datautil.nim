@@ -29,10 +29,13 @@ proc saveData*(data: JsonNode) =
   path.parentDir.createDir
   path.writeFile(data.pretty)
 
-proc encStr*(data: JsonNode, target: string): string =
+proc encStr*(data: JsonNode, target: string, isOneLine: bool): string =
   ## Select target and return the data.
   if target in data:
     return data[target].getStr
+
+  if isOneLine:
+    quit(target & " not exists in data.")
 
   var list = @["new item"]
   for key, node in data:
